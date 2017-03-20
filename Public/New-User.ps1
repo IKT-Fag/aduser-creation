@@ -92,6 +92,7 @@ function New-User
         Write-Verbose "$Givenname $Surname -- starting to create user."
 
         ## Naming-scheme related stuff
+        ## Users will be named like so: "2017PetBom"
         $GivennameChars = 3
         $SurnameChars = 3
         if ($Givenname.Length -lt $GivennameChars) { $GivennameChars = 2 }
