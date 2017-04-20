@@ -78,7 +78,7 @@ function Set-User
             $User | Set-ADUser -Enabled $True
 
             ## Move the user to $OUPath
-            Write-Verbose "$SamAccountName - moving user to new OU.."
+            Write-Verbose "$SamAccountName -- moving user to new OU.."
             $User | Move-ADObject -TargetPath $OUPath -Confirm:$False
 
             $Success = $True
