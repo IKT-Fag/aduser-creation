@@ -4,7 +4,7 @@
 RootModule = 'ADUser-Creation.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.0'
+ModuleVersion = '1.0.0'
 
 # ID used to uniquely identify this module
 GUID = '98d8378a-5246-4e02-bac8-fa545612a8dc'

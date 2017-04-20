@@ -5,6 +5,7 @@ $PrivateFunction = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorActi
 foreach ($import in @($PublicFunction + $PrivateFunction))
 {
     Write-Verbose "Importing $import"
+    if ($Import.Name -like "*test*") { continue }
     try
     {
         . $import.fullname

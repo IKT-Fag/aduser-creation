@@ -1,2 +1,2 @@
 Givenname;Middlename;Surname;Group;OUPath
-Petter;;Bomban;Local Admins,Elever;OU=PowerShellTest,OU=Brukere,OU=IKT-FAG,DC=IKT-FAG,DC=NO
+test;;user;Local Admins,Elever,2isa;OU=PowerShellTest,OU=Brukere,OU=IKT-FAG,DC=IKT-FAG,DC=NO
