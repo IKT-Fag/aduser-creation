@@ -27,21 +27,27 @@ function Sync-UserToAzure
         $sec = 3
 
         ## Available licenses in o365
-        $Licenses = @{
-            Student = "STANDARDWOFFPACK_STUDENT"
-            Teacher = "STANDARDWOFFPACK_FACULTY"
-            Alumni  = "EXCHANGESTANDARD_ALUMNI"
-            Admin   = @("STANDARDWOFFPACK_STUDENT", "STANDARDWOFFPACK_FACULTY")
+        $Licenses = [PSCustomObject]@{
+            # STANDARDWOFFPACK_STUDENT
+            Student = "314c4481-f395-4525-be8b-2ec4bb1e9d91"
+            # STANDARDWOFFPACK_FACULTY
+            Teacher = "94763226-9b3c-4e75-a931-5c89701abe66" 
+            # EXCHANGESTANDARD_ALUMNI
+            Alumni  = "aa0f9eb7-eff2-4943-8424-226fb137fcad"
+            # STANDARDWOFFPACK_STUDENT, STANDARDWOFFPACK_FACULTY
+            Admin   = @("314c4481-f395-4525-be8b-2ec4bb1e9d91",
+                        "94763226-9b3c-4e75-a931-5c89701abe66")
         }
     }
 
     process
     {
         ## Sync the user to Azure AD
-        $SyncSycle = Start-ADSyncSyncCycle -PolicyType Delta
+        $SyncSycle = Start-ADSyncSyncCycle -PolicyType Delta -ErrorAction Stop
         if ($SyncSycle.Result -ne "Success")
         {
             Write-Error "ADSyncSycle delta was not a success.."
+            Write-Error $Error[0]
         }
         while (!(Get-AzureADUser -ObjectId $UserPrincipalName -ErrorAction SilentlyContinue))
         {
@@ -51,22 +57,38 @@ function Sync-UserToAzure
         Write-Verbose "$UserPrincipalName -- successfully synced with AzureAD!"
 
         ## License the user
-        $Obj = @[PSCustomObject]@{
+        $Obj = [PSCustomObject]@{
             UserPrincipalName   = $UserPrincipalName
             License             = $UserType
+            Success             = $Null
         }
         ## Just return if the user doesn't need a license
         if ($UserType -eq "NoLicense")
         {
             Write-Verbose "$UserPrincipalName -- specified NoLicense, skipping"
+            $Obj.Success = $True
             $Obj
             break
         }
 
         Write-Verbose "$UserPrincipalName -- attempting to license user"
-        $AzureADUser = Get-AzureADUser -ObjectId $UserPrincipalName
-        $AzureADUser | Set-AzureADUserLicense -AssignedLicenses $Licenses.$UserType
-        Write-Verbose "$UserPrincipalName -- assigned license: $UserType"
+        try
+        {
+            $License = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
+            $License.SkuId = $Licenses.$UserType
+
+            $AssignedLicenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+            $AssignedLicenses.AddLicenses = $License
+            Set-AzureADUserLicense -ObjectId $UserPrincipalName -AssignedLicenses $AssignedLicenses
+
+            Write-Verbose "$UserPrincipalName -- assigned license: $UserType"
+            $Obj.Success = $True
+        }
+        catch
+        {
+            $Error[0]
+            $Obj.Success = $False
+        }
 
         $Obj
     }
