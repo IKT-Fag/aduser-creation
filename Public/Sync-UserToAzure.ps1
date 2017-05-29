@@ -12,13 +12,23 @@ function Sync-UserToAzure
         [string] $UserPrincipalName,
 
         [Parameter( Mandatory = $True)]
-        [ValidateSet("Student", "Teacher", "Admin","Alumni", "NoLicense")]
+        [ValidateSet("Student", "Teacher", "Admin", "Alumni", "NoLicense")]
         [string] $UserType
     )
 
     begin
     {
-        Import-Module ActiveDirectory, ADSync -ErrorAction Stop -Verbose:$False
+        Import-Module ActiveDirectory -ErrorAction Stop -Verbose:$False
+
+        try
+        {
+            Import-Module ADSync -ErrorAction Stop -Verbose:$False
+        }
+        catch
+        {
+            Write-Error "ADSync not installed on this computer. Will not be able to license user(s)."
+        }
+
         Connect-AzureAD -Credential $Credential -ErrorAction Stop -Verbose:$False
 
         Write-Verbose "Waiting for users to be synced with AzureAD."

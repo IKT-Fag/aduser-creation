@@ -4,7 +4,8 @@ function Remove-User
     param
     (
         [Parameter( Mandatory = $True,
-                    ValueFromPipelineByPropertyName = $True)]
+            ValueFromPipeline = $True,
+            ValueFromPipelineByPropertyName = $True)]
         [string] $Username,
 
         [Parameter( Mandatory = $False)]
