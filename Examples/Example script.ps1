@@ -1,4 +1,4 @@
-Import-Module ADUser-Creation
+Import-Module "C:\Users\admin\Documents\GitHub\aduser-creation\ADUser-Creation.psm1"
 
-New-User -CSVPath ".\Example CSV.csv" | Set-User | 
-    Sync-UserToAzure -Credential (Get-Credential) -UserType "Admin"
+New-User -Givenname "Trygve" -Surname "Eikeland" -Group "Elever" -OUPath "OU=Brukere,OU=IKT-FAG,DC=IKT-FAG,DC=NO" |
+Set-User | Sync-UserToAzure -Credential (Get-Credential) -UserType Student
