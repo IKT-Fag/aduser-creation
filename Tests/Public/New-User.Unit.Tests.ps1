@@ -2,7 +2,7 @@ Remove-Module ADUser-Creation
 Import-Module "C:\Users\admin\Documents\GitHub\aduser-creation\ADUser-Creation.psm1"
 
 InModuleScope ADUser-Creation {
-    Describe 'Individual New-User' {
+    Describe '(UNIT TEST)Individual New-User' {
 
         Context 'Should NOT fail checks' {
             ## Mocks that makes external modules succeed
