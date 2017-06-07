@@ -39,7 +39,7 @@ function New-User {
 
         ## Domain info
         $Domain = Get-ADDomain
-        $DomainLdapName = $DomainInfo.DistinguishedName
+        $DomainLdapName = $Domain.DistinguishedName
         $DomainName = $Domain.Name + ".no"
         $ADServer = $Domain.InfrastructureMaster
 
