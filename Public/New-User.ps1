@@ -100,8 +100,10 @@ function New-User {
         $UserPrincipalName = $SamAccountName + "@$DomainName"
 
         ## Creating a first-time password
+        $NonSecurePassword = New-RandomPassword
+        
         $PasswordParams = @{
-            String      = New-RandomPassword
+            String      = $NonSecurePassword
             AsPlainText = $True
             Force       = $True
         }
@@ -145,7 +147,7 @@ function New-User {
             Surname           = $Surname
             UserPrincipalName = $UserPrincipalName
             SamAccountName    = $SamAccountName
-            AccountPassword   = $Password
+            AccountPassword   = $NonSecurePassword
             EmailAddress      = $EmailAddress
             Description       = $UserPrincipalName
             Enabled           = $False 
